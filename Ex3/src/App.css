@@ -1,0 +1,75 @@
+import React, { useState } from 'react';
+
+const App = () => {
+  const [input, setInput] = useState('');
+  const [rotatingButton, setRotatingButton] = useState(null); // To track the rotating button
+
+  const handleClick = (value, index) => {
+    setInput(input + value);
+    setRotatingButton(index); // Set the clicked button to rotate
+    setTimeout(() => setRotatingButton(null), 500); // Remove rotation after 0.5s
+  };
+
+  const handleClear = () => {
+    setInput('');
+  };
+
+  const handleCalculate = () => {
+    try {
+      setInput(eval(input).toString());
+    } catch (error) {
+      setInput('Error');
+    }
+  };
+
+  const buttons = [
+    { label: 'C', value: 'clear', isOperator: true, onClick: handleClear },
+    { label: '/', value: '/', isOperator: true },
+    { label: '*', value: '*', isOperator: true },
+    { label: '7', value: '7' },
+    { label: '8', value: '8' },
+    { label: '9', value: '9' },
+    { label: '-', value: '-', isOperator: true },
+    { label: '4', value: '4' },
+    { label: '5', value: '5' },
+    { label: '6', value: '6' },
+    { label: '+', value: '+', isOperator: true },
+    { label: '1', value: '1' },
+    { label: '2', value: '2' },
+    { label: '3', value: '3' },
+    { label: '=', value: 'equals', isOperator: true, onClick: handleCalculate },
+    { label: '0', value: '0', isOperator: false, spanTwo: true },
+    { label: '.', value: '.' },
+  ];
+
+  return (
+    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+      <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md w-full">
+        <div className="text-right mb-6 p-4 bg-gray-800 rounded-lg text-white text-3xl shadow-inner">
+          {input || '0'}
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+          {buttons.map((button, index) => (
+            <button
+              key={index}
+              onClick={() =>
+                button.onClick ? button.onClick() : handleClick(button.value, index)
+              }
+              className={`${
+                button.spanTwo ? 'col-span-2' : ''
+              } ${rotatingButton === index ? 'animate-rotate' : ''} ${
+                button.isOperator
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-700 text-white'
+              } p-4 rounded-lg shadow-md hover:bg-blue-600 transition-transform transform hover:scale-110`}
+            >
+              {button.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
